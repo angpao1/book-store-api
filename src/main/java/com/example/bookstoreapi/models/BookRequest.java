@@ -1,5 +1,7 @@
 package com.example.bookstoreapi.models;
 
+import java.util.Comparator;
+
 public class BookRequest {
 
     private long id;
@@ -69,4 +71,21 @@ public class BookRequest {
                 ", is_recommended=" + is_recommended +
                 '}';
     }
+
+    public static Comparator<BookRequest> BookNameComparator
+            = new Comparator<BookRequest>() {
+
+        public int compare(BookRequest book1, BookRequest book2) {
+
+            String bookName1 = book1.getBook_name().toUpperCase();
+            String bookName2 = book2.getBook_name().toUpperCase();
+
+            //ascending order
+            return bookName1.compareTo(bookName2);
+
+            //descending order
+            //return bookName2.compareTo(bookName1);
+        }
+
+    };
 }
