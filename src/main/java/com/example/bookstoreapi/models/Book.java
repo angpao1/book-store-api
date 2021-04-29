@@ -2,7 +2,7 @@ package com.example.bookstoreapi.models;
 
 public class Book {
 
-    private long id;
+    private int id;
     private String name;
     private String author;
     private float price;
@@ -11,7 +11,7 @@ public class Book {
     public Book() {
     }
 
-    public Book(long id, String name, String author, float price, boolean is_recommended) {
+    public Book(int id, String name, String author, float price, boolean is_recommended) {
         this.id = id;
         this.name = name;
         this.author = author;
@@ -19,11 +19,11 @@ public class Book {
         this.is_recommended = is_recommended;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

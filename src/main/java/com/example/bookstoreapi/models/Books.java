@@ -2,14 +2,14 @@ package com.example.bookstoreapi.models;
 
 import java.util.ArrayList;
 
-public class BookResponse {
+public class Books {
 
     private ArrayList<Book> books;
 
-    public BookResponse() {
+    public Books() {
     }
 
-    public BookResponse(ArrayList<Book> books) {
+    public Books(ArrayList<Book> books) {
         this.books = books;
     }
 

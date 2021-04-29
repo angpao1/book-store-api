@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 public class BookRequest {
 
-    private long id;
+    private int id;
     private String book_name;
     private String author_name;
     private float price;
@@ -13,7 +13,7 @@ public class BookRequest {
     public BookRequest() {
     }
 
-    public BookRequest(long id, String book_name, String author_name, float price, boolean is_recommended) {
+    public BookRequest(int id, String book_name, String author_name, float price, boolean is_recommended) {
         this.id = id;
         this.book_name = book_name;
         this.author_name = author_name;
@@ -21,11 +21,11 @@ public class BookRequest {
         this.is_recommended = is_recommended;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -82,9 +82,6 @@ public class BookRequest {
 
             //ascending order
             return bookName1.compareTo(bookName2);
-
-            //descending order
-            //return bookName2.compareTo(bookName1);
         }
 
     };
