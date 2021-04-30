@@ -1,5 +1,6 @@
 package com.example.bookstoreapi;
 
+import com.example.bookstoreapi.services.BookService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import redis.clients.jedis.Jedis;
@@ -13,7 +14,7 @@ public class BookStoreApiApplication {
     }
 
     public static void fetchBookFormPublisger() {
-//        BookService bookService = new BookService();
-//        bookService.fetchBookFormPublisger();
+        BookService bookService = new BookService();
+        bookService.fetchBookFormPublisger();
     }
 }
