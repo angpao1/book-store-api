@@ -5,6 +5,8 @@ import com.example.bookstoreapi.services.*;
 import com.example.bookstoreapi.util.EncryptData;
 import com.example.bookstoreapi.util.JwtTokenUtil;
 import com.example.bookstoreapi.util.Validator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import org.json.JSONObject;
@@ -110,7 +112,7 @@ public class UserController {
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             System.out.println(formatter.format(date));
 
-            userService.createUser(new User(username, passwordHash, name, surname, date_of_birth, formatter.format(date)));
+            userService.createUser(new User(0, username, passwordHash, name, surname, date_of_birth, formatter.format(date)));
             return new ResponseEntity<>("", HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -139,11 +141,17 @@ public class UserController {
             return new ResponseEntity<>("access denied", HttpStatus.UNAUTHORIZED);
         }
 
+        if(orders.getOrders().size() == 0) {
+            System.out.println("orders size " + orders.getOrders().size());
+            return new ResponseEntity<>("orders empty", HttpStatus.BAD_REQUEST);
+        }
+
         int user_id = (int) jws.getBody().get("user_id");
         float price = 0;
 
         Books books = bookService.getBook();
         List<OrderDetail> bookList = new ArrayList<>();
+        System.out.println("1------------"+orders.getOrders().size());
         for (int i = 0; i < orders.getOrders().size(); ++i) {
             for (int j = 0; j < books.getBooks().size(); ++j) {
                 if (orders.getOrders().get(i) == books.getBooks().get(j).getId()) {
@@ -172,19 +180,29 @@ public class UserController {
 
         for (int i = 0; i < bookList.size(); ++i) {
             bookList.get(i).setOrder_id(_order.getOrder_id());
-            System.out.println(bookList.get(i).toString());
+            System.out.println(bookList.get(i).getBook_name());
         }
 
         try {
             orderDetailService.createOrderDetail(bookList);
         } catch (Exception e) {
             e.printStackTrace();
+            return new ResponseEntity<>("500 Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        JSONObject response = new JSONObject();
-        response.put("price", order.getPrice());
+        Price totalPrice = new Price();
+        totalPrice.setPrice(order.getPrice());
+        ObjectMapper mapper = new ObjectMapper();
+        //Converting the Object to JSONString
+        String jsonString = null;
+        try {
+            jsonString = mapper.writeValueAsString(totalPrice);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        System.out.println(jsonString);
 
-        return new ResponseEntity<>(response.toString(), HttpStatus.OK);
+        return new ResponseEntity<>(jsonString, HttpStatus.OK);
     }
 
     @DeleteMapping("/users")
@@ -270,13 +288,18 @@ public class UserController {
             }
         }
 
-        JSONObject response = new JSONObject();
-        response.put("name", name);
-        response.put("surname", surname);
-        response.put("date_of_birth", date_of_birth);
-        response.put("books", books);
+        UserResponse userResponse = new UserResponse(name, surname, date_of_birth, books);
+        ObjectMapper mapper = new ObjectMapper();
+        //Converting the Object to JSONString
+        String jsonString = null;
+        try {
+            jsonString = mapper.writeValueAsString(userResponse);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        System.out.println(jsonString);
 
 
-        return new ResponseEntity<>(response.toString(), HttpStatus.OK);
+        return new ResponseEntity<>(jsonString, HttpStatus.OK);
     }
 }
